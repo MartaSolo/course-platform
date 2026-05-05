@@ -1,0 +1,31 @@
+{
+  "name": "course-platform",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "nuxt": "^4.4.4",
+    "tailwindcss": "^4.2.4",
+    "vue": "^3.5.33",
+    "vue-router": "^5.0.6"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.15.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "@vueuse/core": "^14.3.0",
+    "@vueuse/nuxt": "^14.3.0",
+    "eslint": "^9.39.4",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.2.8"
+  }
+}
