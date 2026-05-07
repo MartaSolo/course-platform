@@ -1,21 +1,23 @@
 <script setup lang="ts">
-const { chapters } = useCourse();
+const { title, chapters } = useCourse();
+
+const handleClearError = () => {
+  clearError({ redirect: "/" });
+};
 </script>
 
 <template>
-  <div
-    class="p-12 bg-gray-100 w-full h-full min-h-screen flex flex-col items-center"
-  >
+  <div class="w-full flex flex-col items-center">
     <div class="prose mb-12">
       <h1>
         <span class="font-medium">
           Course:
-          <span class="font-bold">Mastering Nuxt 3</span>
+          <span class="font-bold">{{ title }}</span>
         </span>
       </h1>
     </div>
 
-    <div class="flex flex-row justify-center flex-grow">
+    <div class="flex flex-row justify-center grow">
       <div
         class="prose mr-4 p-8 bg-white rounded-md min-w-[20ch] max-w-[30ch] flex flex-col"
       >
@@ -44,7 +46,22 @@ const { chapters } = useCourse();
       </div>
 
       <div class="prose p-12 bg-white rounded-md w-full max-w-[75ch]">
-        <NuxtPage />
+        <NuxtErrorBoundary>
+          <NuxtPage />
+          <template #error="{ error }">
+            <div>
+              <p>Oh sth went wrong with the lesson</p>
+              <code>{{ error }}</code>
+              <p>{{ error.message }}</p>
+              <button
+                class="hover:cursor-pointer bg-gray-500 text-white font-bold py-1 px-3 rounded"
+                @click="handleClearError()"
+              >
+                Clear Error
+              </button>
+            </div>
+          </template>
+        </NuxtErrorBoundary>
       </div>
     </div>
   </div>
