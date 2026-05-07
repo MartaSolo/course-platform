@@ -15,6 +15,13 @@ const lesson = computed(() => {
   );
 });
 
+if (!chapter.value) {
+  throw createError({ statusCode: 404, statusMessage: "Chapter not found" });
+}
+if (!lesson.value) {
+  throw createError({ statusCode: 404, statusMessage: "Lesson not found" });
+}
+
 const title = computed(() => {
   return `${lesson.value?.title} - ${course.title}`;
 });
