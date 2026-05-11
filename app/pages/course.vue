@@ -1,8 +1,10 @@
 <script setup lang="ts">
-const { title, chapters } = useCourse();
+const course = await useCourse();
+
+const firstLesson = await useFirstLesson();
 
 const handleClearError = () => {
-  clearError({ redirect: "/" });
+  clearError({ redirect: firstLesson?.path ?? "/" });
 };
 </script>
 
@@ -12,7 +14,7 @@ const handleClearError = () => {
       <h1 class="text-3xl">
         <span class="font-medium">
           Course:
-          <span class="font-bold">{{ title }}</span>
+          <span class="font-bold">{{ course.title }}</span>
         </span>
       </h1>
       <UserCard />
@@ -24,25 +26,26 @@ const handleClearError = () => {
       >
         <h3>Chapters</h3>
         <div
-          v-for="chapter in chapters"
+          v-for="chapter in course.chapters"
           :key="chapter.slug"
           class="space-y-1 mb-4 flex-col"
         >
           <h4>{{ chapter.title }}</h4>
-          <NuxtLink
-            v-for="lesson in chapter.lessons"
-            :key="lesson.slug"
-            :to="lesson.path"
-            class="flex flex-row space-x-1 no-underline prose-sm py-1"
-            :class="
-              $route.fullPath === lesson.path
-                ? 'font-bold text-blue-600'
-                : 'font-normal text-gray-600'
-            "
-          >
-            <span class="text-gray-500">{{ lesson.number }}</span>
-            <span>{{ lesson.title }}</span>
-          </NuxtLink>
+          <template v-for="lesson in chapter.lessons" :key="lesson.slug">
+            <NuxtLink
+              v-if="'path' in lesson"
+              :to="lesson.path"
+              class="flex flex-row space-x-1 no-underline prose-sm py-1"
+              :class="
+                $route.fullPath === lesson.path
+                  ? 'font-bold text-blue-600'
+                  : 'font-normal text-gray-600'
+              "
+            >
+              <span class="text-gray-500">{{ lesson.number }}</span>
+              <span>{{ lesson.title }}</span>
+            </NuxtLink>
+          </template>
         </div>
       </div>
 
