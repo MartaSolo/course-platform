@@ -1,14 +1,12 @@
 <script setup lang="ts">
-const course = useCourse();
-
-const route = useRoute();
+const course = await useCourse();
 
 definePageMeta({
   middleware: [
-    function ({ params }, _from) {
-      const course = useCourse();
+    async function ({ params }, _from) {
+      const course = await useCourse();
 
-      const chapter = course.chapters.find(
+      const chapter = course.value.chapters.find(
         (chapter) => chapter.slug === params.chapterSlug
       );
 
@@ -38,20 +36,19 @@ definePageMeta({
   ],
 });
 
+const route = useRoute();
+const { chapterSlug, lessonSlug } = route.params;
+
+const lesson = await useLesson(chapterSlug as string, lessonSlug as string);
+
 const chapter = computed(() => {
-  return course.chapters.find(
+  return course.value?.chapters.find(
     (chapter) => chapter.slug === route.params.chapterSlug
   );
 });
 
-const lesson = computed(() => {
-  return chapter.value?.lessons.find(
-    (lesson) => lesson.slug === route.params.lessonSlug
-  );
-});
-
 const title = computed(() => {
-  return `${lesson.value?.title} - ${course.title}`;
+  return `${lesson.value?.title} - ${course.value?.title}`;
 });
 
 useHead({
@@ -110,6 +107,7 @@ const toggleComplete = () => {
       </NuxtLink>
     </div>
     <VideoPlayer v-if="lesson?.videoId" :video-id="lesson.videoId" />
+    <!-- <VideoPlayer v-if="lesson?.videoId" :video-id="lesson.videoId" /> -->
     <p>{{ lesson?.text }}</p>
 
     <LessonCompleteButton
