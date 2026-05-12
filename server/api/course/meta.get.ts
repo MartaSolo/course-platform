@@ -1,39 +1,61 @@
-import type {
-  Course,
-  Chapter,
-  Lesson,
-  CourseMeta,
-  OutlineChapter,
-  OutlineLesson,
-} from "~~/shared/types/course";
+import type { Prisma } from "~~/prisma/generated/client";
+import { PrismaClient } from "~~/prisma/generated/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-import courseData from "~~/server/courseData";
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 
-const course = courseData as Course;
+const prisma = new PrismaClient({ adapter });
 
-export default defineEventHandler((event): CourseMeta => {
-  const outline: OutlineChapter[] = course.chapters.reduce(
-    (prev: OutlineChapter[], next: Chapter) => {
-      const lessons: OutlineLesson[] = next.lessons.map((lesson: Lesson) => ({
-        title: lesson.title,
-        slug: lesson.slug,
-        number: lesson.number,
-        path: `/course/chapter/${next.slug}/lesson/${lesson.slug}`,
-      }));
+const lessonSelect = {
+  title: true,
+  slug: true,
+  number: true,
+} satisfies Prisma.LessonSelect;
 
-      const chapter: OutlineChapter = {
-        title: next.title,
-        slug: next.slug,
-        number: next.number,
-        lessons,
-      };
-      return [...prev, chapter];
-    },
-    []
-  );
+const chapterSelect = {
+  title: true,
+  slug: true,
+  number: true,
+  lessons: {
+    select: lessonSelect,
+  },
+} satisfies Prisma.ChapterSelect;
 
+const courseSelect = {
+  title: true,
+  chapters: {
+    select: chapterSelect,
+  },
+} satisfies Prisma.CourseSelect;
+
+const getCourse = async () => {
+  const course = await prisma.course.findFirst({ select: courseSelect });
+  if (!course) return null;
   return {
-    title: course.title,
-    chapters: outline,
+    ...course,
+    chapters: course.chapters.map((chapter) => ({
+      ...chapter,
+      lessons: chapter.lessons.map((lesson) => ({
+        ...lesson,
+        path: `/course/chapter/${chapter.slug}/lesson/${lesson.slug}`,
+      })),
+    })),
   };
+};
+
+export type CourseOutline = NonNullable<Awaited<ReturnType<typeof getCourse>>>;
+export type ChapterOutline = CourseOutline["chapters"][number];
+export type LessonOutline = ChapterOutline["lessons"][number];
+
+export default defineEventHandler(async () => {
+  const course = await getCourse();
+
+  if (!course) {
+    throw createError({
+      statusCode: 404,
+      message: "Course not found",
+    });
+  }
+
+  return course;
 });

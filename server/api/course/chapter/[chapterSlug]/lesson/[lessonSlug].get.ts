@@ -1,31 +1,26 @@
-import type {
-  Course,
-  Chapter,
-  Lesson,
-  LessonWithPath,
-} from "~~/shared/types/course";
+import { PrismaClient } from "~~/prisma/generated/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import protectRoute from "~~/server/utils/protectRoute";
 
-import courseData from "~~/server/courseData";
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
-const course = courseData as Course;
-
-export default defineEventHandler((event): LessonWithPath => {
-  const { chapterSlug, lessonSlug } = getRouterParams(event);
-
-  const chapter: Maybe<Chapter> = course.chapters.find(
-    (chapter) => chapter.slug === chapterSlug
-  );
-
-  if (!chapter) {
-    throw createError({
-      statusCode: 404,
-      message: "Chapter not found",
-    });
+export default defineEventHandler(async (event) => {
+  // Allow unauthenticated users to access the first chapter's lessons
+  if (event.context.params?.chapterSlug !== "1-chapter-1") {
+    protectRoute(event);
   }
 
-  const lesson: Maybe<Lesson> = chapter.lessons.find(
-    (lesson) => lesson.slug === lessonSlug
-  );
+  const { chapterSlug, lessonSlug } = getRouterParams(event);
+
+  const lesson = await prisma.lesson.findFirst({
+    where: {
+      slug: lessonSlug,
+      chapter: {
+        slug: chapterSlug,
+      },
+    },
+  });
 
   if (!lesson) {
     throw createError({
