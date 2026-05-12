@@ -1,0 +1,43 @@
+datasource db {
+ provider = "postgresql"
+}
+
+generator client {
+ provider = "prisma-client"
+ output   = "./generated"
+}
+
+model Course {
+ id        Int       @id @default(autoincrement())
+ title     String
+ createdAt DateTime  @default(now())
+ updatedAt DateTime  @updatedAt
+ chapters  Chapter[]
+}
+
+model Chapter {
+ id        Int      @id @default(autoincrement())
+ title     String
+ slug      String
+ number    Int
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ lessons   Lesson[]
+ course    Course   @relation(fields: [courseId], references: [id])
+ courseId  Int
+}
+
+model Lesson {
+ id          Int      @id @default(autoincrement())
+ title       String
+ slug        String
+ number      Int
+ downloadUrl String
+ videoId     Int?
+ text        String
+ sourceUrl   String?
+ createdAt   DateTime @default(now())
+ updatedAt   DateTime @updatedAt
+ chapter     Chapter  @relation(fields: [chapterId], references: [id])
+ chapterId   Int
+}

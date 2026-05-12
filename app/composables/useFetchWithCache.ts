@@ -12,7 +12,9 @@ export const useFetchWithCache = async <T>(url: string) => {
   );
 
   if (!cached.value) {
-    const { data, error } = await useFetch<T>(url);
+    const { data, error } = await useFetch<T>(url, {
+      headers: useRequestHeaders(["cookie"]),
+    });
 
     if (error.value) {
       throw createError({
