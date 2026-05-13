@@ -55,33 +55,21 @@ useHead({
   title: title.value,
 });
 
-const progress = useLocalStorage<boolean[][]>("progress", []);
+const user = useSupabaseUser();
 
-const isLessonComplete = computed<boolean>(() => {
-  if (!chapter.value?.number || !lesson.value?.number) return false;
+const courseProgressStore = useCourseProgress();
+const { progress } = storeToRefs(courseProgressStore);
 
-  if (!progress.value[chapter.value.number - 1]) return false;
+const { toggleComplete, initialize } = courseProgressStore;
 
-  if (!progress.value[chapter.value?.number - 1]?.[lesson.value?.number - 1]) {
-    return false;
-  }
+initialize();
 
+// Check if the lesson is complete
+const isCompleted = computed<boolean>(() => {
   return (
-    progress.value[chapter.value?.number - 1]?.[lesson.value?.number - 1] ??
-    false
+    progress.value?.[chapterSlug as string]?.[lessonSlug as string] || false
   );
 });
-
-const toggleComplete = () => {
-  if (!chapter.value?.number || !lesson.value?.number) return;
-
-  if (!progress.value[chapter.value?.number - 1]) {
-    progress.value[chapter.value?.number - 1] = [];
-  }
-
-  progress.value[chapter.value?.number - 1]![lesson.value?.number - 1] =
-    !isLessonComplete.value;
-};
 </script>
 
 <template>
@@ -107,12 +95,14 @@ const toggleComplete = () => {
       </NuxtLink>
     </div>
     <VideoPlayer v-if="lesson?.videoId" :video-id="lesson.videoId" />
-    <!-- <VideoPlayer v-if="lesson?.videoId" :video-id="lesson.videoId" /> -->
     <p>{{ lesson?.text }}</p>
 
     <LessonCompleteButton
-      :model-value="isLessonComplete"
-      @update:model-value="toggleComplete"
+      v-if="user"
+      :model-value="isCompleted"
+      @update:model-value="
+        toggleComplete(chapterSlug as string, lessonSlug as string)
+      "
     />
   </div>
 </template>

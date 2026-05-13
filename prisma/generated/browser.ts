@@ -32,3 +32,8 @@ export type Chapter = Prisma.ChapterModel
  * 
  */
 export type Lesson = Prisma.LessonModel
+/**
+ * Model LessonProgress
+ * 
+ */
+export type LessonProgress = Prisma.LessonProgressModel

@@ -6,6 +6,12 @@ const firstLesson = await useFirstLesson();
 const handleClearError = () => {
   clearError({ redirect: firstLesson?.path ?? "/" });
 };
+
+const user = useSupabaseUser();
+
+const courseProgressStore = useCourseProgress();
+
+const { percentageCompleted } = storeToRefs(courseProgressStore);
 </script>
 
 <template>
@@ -26,11 +32,19 @@ const handleClearError = () => {
       >
         <h3>Chapters</h3>
         <div
-          v-for="chapter in course.chapters"
+          v-for="(chapter, index) in course.chapters"
           :key="chapter.slug"
           class="space-y-1 mb-4 flex-col"
         >
-          <h4>{{ chapter.title }}</h4>
+          <h4 class="flex justify-between items-center">
+            {{ chapter.title }}
+            <span
+              v-if="percentageCompleted && user"
+              class="text-emerald-500 text-sm"
+            >
+              {{ percentageCompleted.chapters[index] }}%
+            </span>
+          </h4>
           <template v-for="lesson in chapter.lessons" :key="lesson.slug">
             <NuxtLink
               v-if="'path' in lesson"
@@ -46,6 +60,13 @@ const handleClearError = () => {
               <span>{{ lesson.title }}</span>
             </NuxtLink>
           </template>
+        </div>
+        <div
+          v-if="percentageCompleted"
+          class="mt-8 text-sm font-medium text-gray-500 flex justify-between items-center"
+        >
+          Course completion:
+          <span> {{ percentageCompleted.course }}% </span>
         </div>
       </div>
 
