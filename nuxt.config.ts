@@ -25,4 +25,9 @@ export default defineNuxtConfig({
       exclude: ["/*"],
     },
   },
+  nitro: {
+    prerender: {
+      routes: ["/landing"],
+    },
+  },
 });
