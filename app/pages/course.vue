@@ -11,6 +11,8 @@ const user = useSupabaseUser();
 
 const courseProgressStore = useCourseProgress();
 
+courseProgressStore.initialize();
+
 const { percentageCompleted } = storeToRefs(courseProgressStore);
 </script>
 
@@ -92,6 +94,3 @@ const { percentageCompleted } = storeToRefs(courseProgressStore);
   </div>
 </template>
 
-<style scoped>
-@reference "~/assets/css/tailwind.css";
-</style>

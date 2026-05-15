@@ -387,7 +387,8 @@ export const ModelName = {
   Course: 'Course',
   Chapter: 'Chapter',
   Lesson: 'Lesson',
-  LessonProgress: 'LessonProgress'
+  LessonProgress: 'LessonProgress',
+  CoursePurchase: 'CoursePurchase'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "course" | "chapter" | "lesson" | "lessonProgress"
+    modelProps: "course" | "chapter" | "lesson" | "lessonProgress" | "coursePurchase"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CoursePurchase: {
+      payload: Prisma.$CoursePurchasePayload<ExtArgs>
+      fields: Prisma.CoursePurchaseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CoursePurchaseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CoursePurchaseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload>
+        }
+        findFirst: {
+          args: Prisma.CoursePurchaseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CoursePurchaseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload>
+        }
+        findMany: {
+          args: Prisma.CoursePurchaseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload>[]
+        }
+        create: {
+          args: Prisma.CoursePurchaseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload>
+        }
+        createMany: {
+          args: Prisma.CoursePurchaseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CoursePurchaseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload>[]
+        }
+        delete: {
+          args: Prisma.CoursePurchaseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload>
+        }
+        update: {
+          args: Prisma.CoursePurchaseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload>
+        }
+        deleteMany: {
+          args: Prisma.CoursePurchaseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CoursePurchaseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CoursePurchaseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload>[]
+        }
+        upsert: {
+          args: Prisma.CoursePurchaseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoursePurchasePayload>
+        }
+        aggregate: {
+          args: Prisma.CoursePurchaseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCoursePurchase>
+        }
+        groupBy: {
+          args: Prisma.CoursePurchaseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoursePurchaseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CoursePurchaseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoursePurchaseCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -792,6 +867,19 @@ export const LessonProgressScalarFieldEnum = {
 } as const
 
 export type LessonProgressScalarFieldEnum = (typeof LessonProgressScalarFieldEnum)[keyof typeof LessonProgressScalarFieldEnum]
+
+
+export const CoursePurchaseScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  courseId: 'courseId',
+  userEmail: 'userEmail',
+  verified: 'verified',
+  paymentId: 'paymentId'
+} as const
+
+export type CoursePurchaseScalarFieldEnum = (typeof CoursePurchaseScalarFieldEnum)[keyof typeof CoursePurchaseScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1000,6 +1088,7 @@ export type GlobalOmitConfig = {
   chapter?: Prisma.ChapterOmit
   lesson?: Prisma.LessonOmit
   lessonProgress?: Prisma.LessonProgressOmit
+  coursePurchase?: Prisma.CoursePurchaseOmit
 }
 
 /* Types for Logging */
