@@ -61,3 +61,8 @@ export type Lesson = Prisma.LessonModel
  * 
  */
 export type LessonProgress = Prisma.LessonProgressModel
+/**
+ * Model CoursePurchase
+ * 
+ */
+export type CoursePurchase = Prisma.CoursePurchaseModel
