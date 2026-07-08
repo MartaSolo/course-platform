@@ -90,9 +90,9 @@ export const useCourseProgress = defineStore("courseProgress", () => {
       0
     );
 
-    const course = Number((totalCompletedLessons / totalLessons) * 100).toFixed(
-      0
-    );
+    const course = Number(
+      (totalCompletedLessons / totalLessons) * 100 || 0
+    ).toFixed(0);
 
     return {
       chapters,
@@ -105,5 +105,6 @@ export const useCourseProgress = defineStore("courseProgress", () => {
     initialize,
     toggleComplete,
     percentageCompleted,
+    initialized,
   };
 });

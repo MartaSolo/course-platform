@@ -16,7 +16,7 @@ const logout = async () => {
 </script>
 
 <template>
-  <div v-if="user" class="rounded p-3 flex items-center space-x-3 bg-white">
+  <div v-if="user" class="rounded-md p-3 flex items-center space-x-3">
     <img
       class="rounded-full w-12 h-12 border-2 border-blue-400"
       :src="profile"

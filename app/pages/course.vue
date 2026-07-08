@@ -11,68 +11,29 @@ const user = useSupabaseUser();
 
 const courseProgressStore = useCourseProgress();
 
-courseProgressStore.initialize();
+const { percentageCompleted, initialized, progress } =
+  storeToRefs(courseProgressStore);
 
-const { percentageCompleted } = storeToRefs(courseProgressStore);
+if (user.value && !initialized.value) {
+  await courseProgressStore.initialize();
+}
 </script>
 
 <template>
   <div class="w-full flex flex-col items-center">
-    <div class="mb-4 flex justify-between items-center w-full">
-      <h1 class="text-3xl">
+    <div
+      class="mb-4 flex flex-col gap-6 md:flex-row-reverse justify-between items-center w-full"
+    >
+      <UserCard class="self-end" />
+      <h1 class="text-2xl md:text-3xl">
         <span class="font-medium">
           Course:
           <span class="font-bold">{{ course.title }}</span>
         </span>
       </h1>
-      <UserCard />
     </div>
-
-    <div class="flex flex-row justify-center grow">
-      <div
-        class="prose mr-4 p-8 bg-white rounded-md min-w-[20ch] max-w-[30ch] flex flex-col"
-      >
-        <h3>Chapters</h3>
-        <div
-          v-for="(chapter, index) in course.chapters"
-          :key="chapter.slug"
-          class="space-y-1 mb-4 flex-col"
-        >
-          <h4 class="flex justify-between items-center">
-            {{ chapter.title }}
-            <span
-              v-if="percentageCompleted && user"
-              class="text-emerald-500 text-sm"
-            >
-              {{ percentageCompleted.chapters[index] }}%
-            </span>
-          </h4>
-          <template v-for="lesson in chapter.lessons" :key="lesson.slug">
-            <NuxtLink
-              v-if="'path' in lesson"
-              :to="lesson.path"
-              class="flex flex-row space-x-1 no-underline prose-sm py-1"
-              :class="
-                $route.fullPath === lesson.path
-                  ? 'font-bold text-blue-600'
-                  : 'font-normal text-gray-600'
-              "
-            >
-              <span class="text-gray-500">{{ lesson.number }}</span>
-              <span>{{ lesson.title }}</span>
-            </NuxtLink>
-          </template>
-        </div>
-        <div
-          v-if="percentageCompleted"
-          class="mt-8 text-sm font-medium text-gray-500 flex justify-between items-center"
-        >
-          Course completion:
-          <span> {{ percentageCompleted.course }}% </span>
-        </div>
-      </div>
-
-      <div class="prose p-12 bg-white rounded-md w-full max-w-[75ch]">
+    <div class="flex gap-6 flex-col lg:flex-row w-full">
+      <div class="p-4 bg-white rounded-md w-full grow lg:p-8">
         <NuxtErrorBoundary>
           <NuxtPage />
           <template #error="{ error }">
@@ -90,7 +51,63 @@ const { percentageCompleted } = storeToRefs(courseProgressStore);
           </template>
         </NuxtErrorBoundary>
       </div>
+
+      <div
+        class="p-4 bg-white rounded-md w-full flex flex-col lg:max-w-[300px] lg:p-8"
+      >
+        <h3 class="text-2xl mb-4 font-medium">Chapters</h3>
+
+        <Accordion
+          v-for="(chapter, index) in course.chapters"
+          :key="chapter.slug"
+          class="mb-4"
+        >
+          <template #header>
+            <div class="flex flex-col">
+              <h4 class="text-left text-xl font-medium">
+                {{ chapter.title }}
+              </h4>
+              <span
+                v-if="percentageCompleted && user"
+                class="text-emerald-500 text-sm"
+              >
+                Completed: {{ percentageCompleted.chapters[index] }}%
+              </span>
+            </div>
+          </template>
+          <template #content>
+            <ul class="list-none p-4">
+              <li v-for="lesson in chapter.lessons" :key="lesson.slug">
+                <NuxtLink
+                  v-if="'path' in lesson"
+                  :to="lesson.path"
+                  class="flex flex-row space-x-1 no-underline prose-sm py-1"
+                  :class="
+                    $route.fullPath === lesson.path
+                      ? 'font-normal text-green-700'
+                      : 'font-normal text-gray-600'
+                  "
+                >
+                  <span>{{ lesson.number }}.</span>
+                  <span>{{ lesson.title }}</span>
+                  <IconsTick
+                    v-if="progress?.[chapter.slug]?.[lesson.slug]"
+                    class="shrink-0 text-emerald-500"
+                  />
+                </NuxtLink>
+              </li>
+            </ul>
+          </template>
+        </Accordion>
+
+        <div
+          v-if="percentageCompleted && user"
+          class="mt-8 text-sm font-medium text-gray-500 flex justify-between items-center"
+        >
+          Course completion:
+          <span> {{ percentageCompleted.course }}% </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
