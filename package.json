@@ -10,7 +10,8 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@nuxtjs/supabase": "^2.0.6",
@@ -33,9 +34,16 @@
     "@vueuse/core": "^14.3.0",
     "@vueuse/nuxt": "^14.3.0",
     "eslint": "^9.39.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "prisma": "^7.8.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.2.8"
+  },
+  "lint-staged": {
+    "*.{vue,ts,js}": [
+      "eslint --fix"
+    ]
   }
 }
