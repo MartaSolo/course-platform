@@ -58,11 +58,13 @@ useHead({
 const user = useSupabaseUser();
 
 const courseProgressStore = useCourseProgress();
-const { progress } = storeToRefs(courseProgressStore);
+const { progress, initialized } = storeToRefs(courseProgressStore);
 
 const { toggleComplete, initialize } = courseProgressStore;
 
-initialize();
+if (user.value && !initialized.value) {
+  await initialize();
+}
 
 // Check if the lesson is complete
 const isCompleted = computed<boolean>(() => {
@@ -77,25 +79,25 @@ const isCompleted = computed<boolean>(() => {
     <p class="mt-0 uppercase font-bold text-slate-400 mb-1">
       Lesson {{ chapter?.number }} - {{ lesson?.number }}
     </p>
-    <h2 class="mt-0 mb-0">{{ lesson?.title }}</h2>
+    <h2 class="my-6 text-2xl font-bold">{{ lesson?.title }}</h2>
     <div class="flex space-x-4 mt-2 mb-8">
       <NuxtLink
         v-if="lesson?.sourceUrl"
-        class="font-normal text-md text-gray-500"
+        class="font-normal text-md text-gray-500 hover:text-green-700"
         :to="lesson?.sourceUrl"
       >
         Download Source Code
       </NuxtLink>
       <NuxtLink
         v-if="lesson?.downloadUrl"
-        class="font-normal text-md text-gray-500"
+        class="font-normal text-md text-gray-500 hover:text-green-700"
         :to="lesson?.downloadUrl"
       >
         Download Video
       </NuxtLink>
     </div>
     <VideoPlayer v-if="lesson?.videoId" :video-id="lesson.videoId" />
-    <p>{{ lesson?.text }}</p>
+    <p class="my-6">{{ lesson?.text }}</p>
 
     <LessonCompleteButton
       v-if="user"
