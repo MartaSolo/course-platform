@@ -29,7 +29,9 @@ const login = async () => {
 </script>
 
 <template>
-  <div class="prose w-full max-w-2xl h-9">
+  <div
+    class="prose w-full mt-20 mx-auto max-w-2xl flex flex-col items-center justify-center"
+  >
     <h1>Log in to {{ course.title }}</h1>
     <button
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

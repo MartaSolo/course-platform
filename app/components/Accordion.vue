@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const isOpen = ref(false);
+const isOpen = ref(true);
 
 const accordionId = useId();
 const buttonId = `accordion-button-${accordionId}`;
