@@ -18,6 +18,8 @@ const processingPayment = ref(false);
 const success = ref(false);
 const paymentIntentId = ref<string | null>(null);
 
+const confirmCardPaymentErrorMessage = ref<string | null>(null);
+
 const formStyle = {
   base: {
     fontSize: "16px",
@@ -46,6 +48,7 @@ const setupStripe = () => {
 
 const handleSubmit = async () => {
   if (email.value === "") return;
+  confirmCardPaymentErrorMessage.value = null;
 
   processingPayment.value = true;
   let secret;
@@ -70,6 +73,10 @@ const handleSubmit = async () => {
       },
       receipt_email: email.value,
     });
+
+    if (response?.error) {
+      confirmCardPaymentErrorMessage.value = response?.error?.message ?? null;
+    }
 
     if (response?.paymentIntent?.status === "succeeded") {
       success.value = true;
@@ -126,10 +133,16 @@ useHead({
               autocomplete="email"
               placeholder="your@email.com"
               required
-            />
+            >
           </div>
           <div id="card-element" class="mb-4">
             <!-- Elements will render here -->
+          </div>
+          <div
+            v-if="confirmCardPaymentErrorMessage"
+            class="text-red-500 text-sm"
+          >
+            {{ confirmCardPaymentErrorMessage }}
           </div>
         </div>
 
