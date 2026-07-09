@@ -22,10 +22,11 @@ if (user.value && !initialized.value) {
 <template>
   <div class="w-full flex flex-col items-center">
     <div
-      class="mb-4 flex flex-col gap-6 md:flex-row-reverse justify-between items-center w-full"
+      class="mb-4 flex flex-col gap-6 justify-between items-center w-full"
+      :class="user ? 'md:flex-row-reverse' : 'md:flex-row'"
     >
-      <UserCard class="self-end" />
-      <h1 class="text-2xl md:text-3xl">
+      <UserCard v-if="user" class="self-end" />
+      <h1 class="text-2xl mb-6 md:text-3xl">
         <span class="font-medium">
           Course:
           <span class="font-bold">{{ course.title }}</span>

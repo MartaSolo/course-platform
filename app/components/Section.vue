@@ -1,15 +1,17 @@
-<script lang="ts">
-// Don't inherit the attributes from the parent component
-// since we only put them on the slot
-export default {
+<script setup lang="ts">
+defineProps<{
+  title?: string;
+}>();
+
+defineOptions({
   inheritAttrs: false,
-};
+});
 </script>
 
 <template>
-  <div class="section bg-white p-24 flex flex-col items-center">
-    <div class="w-full max-w-4xl">
-      <h2 v-if="title" class="text-4xl font-bold pb-8 text-center">
+  <div class="section bg-white px-8 py-12 lg:p-24 flex flex-col items-center">
+    <div class="w-full">
+      <h2 v-if="title" class="text-2xl lg:text-4xl font-bold pb-8 text-center">
         {{ title }}
       </h2>
       <div v-bind="$attrs">
@@ -18,12 +20,6 @@ export default {
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  title?: string;
-}>();
-</script>
 
 <style scoped>
 @reference "~/assets/css/tailwind.css";

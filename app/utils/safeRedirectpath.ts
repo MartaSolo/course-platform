@@ -1,4 +1,4 @@
-const FALLBACK = "/course";
+const FALLBACK = "/";
 
 export function safeRedirectPath(raw: unknown): string {
   if (typeof raw !== "string") return FALLBACK;
