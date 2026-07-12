@@ -1,19 +1,19 @@
 <script setup>
 const user = useSupabaseUser();
+const route = useRoute();
 
 watchEffect(async () => {
   if (user.value) {
-    const route = useRoute();
-
-    await useFetch(`/api/user/linkWithPurchase/${route.params.paymentId}`, {
-      headers: useRequestHeaders(["cookie"]),
-    });
+    // cookies are sent automatically by the browser for same-origin requests
+    await $fetch(`/api/user/linkWithPurchase/${route.params.paymentId}`);
 
     await navigateTo("/", {
       replace: true,
     });
   }
 });
-
-const render = () => {};
 </script>
+
+<template>
+  <div />
+</template>
