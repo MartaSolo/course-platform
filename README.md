@@ -13,6 +13,11 @@ A full-stack course platform built with Nuxt. Visitors can access the first thre
 
 **Live:** [vue-course-platform.netlify.app](https://vue-course-platform.netlify.app/)
 
+For testing payment use stripe test card: 4242424242424242 and any future date.
+
+**Preview:**
+![App preview](.github/course-platform.gif)
+
 ## Environment setup
 
 Copy `.env sample` to `.env` and fill in the values:
@@ -74,7 +79,7 @@ docker compose up --build --watch
 Alternative to Docker. Requires Node.js — see [`.nvmrc`](.nvmrc) for the version (22.14.0).
 
 ```bash
-nvm use          # or: fnm use / asdf install
+nvm use
 npm install
 npm run dev
 ```
