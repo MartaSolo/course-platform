@@ -14,12 +14,13 @@ export default defineEventHandler(async (event) => {
   // No user is logged in
   if (!user) return false;
 
+  const course = await prisma.course.findFirstOrThrow();
+
   const coursePurchases = await prisma.coursePurchase.findMany({
     where: {
       userEmail: user.email,
       verified: true,
-      // Hard coded course ID
-      courseId: 1,
+      courseId: course.id,
     },
   });
 

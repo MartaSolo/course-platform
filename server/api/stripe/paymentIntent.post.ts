@@ -27,13 +27,14 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const course = await prisma.course.findFirstOrThrow();
+
   // Create a course purchase record
   try {
     await prisma.coursePurchase.create({
       data: {
         userEmail: email,
-        // Hard code this value for now
-        courseId: 1,
+        courseId: course.id,
         paymentId: paymentIntent.id,
       },
     });

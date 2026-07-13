@@ -1,34 +1,20 @@
 <script setup lang="ts">
-const props = defineProps<{
-  videoId: number;
+defineProps<{
+  videoSrc: string;
+  title: string;
 }>();
 </script>
 
 <template>
-  <div class="video-wrapper">
+  <div class="aspect-video">
     <iframe
-      :src="`https://player.vimeo.com/video/${props.videoId}`"
-      title="Video player"
+      class="h-full w-full"
+      :src="videoSrc"
+      :title="title"
       frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
       allowfullscreen
     />
   </div>
 </template>
-
-<style scoped>
-.video-wrapper {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%;
-  height: 0;
-}
-
-.video-wrapper iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-</style>

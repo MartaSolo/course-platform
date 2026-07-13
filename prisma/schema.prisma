@@ -33,8 +33,7 @@ model Lesson {
  title            String
  slug             String
  number           Int
- downloadUrl      String
- videoId          Int?
+ youtubeUrl       String
  text             String
  sourceUrl        String?
  createdAt        DateTime         @default(now())
