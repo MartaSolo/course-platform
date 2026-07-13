@@ -16,6 +16,7 @@ A full-stack course platform built with Nuxt. Visitors can access the first thre
 For testing payment use stripe test card: 4242424242424242 and any future date.
 
 **Preview:**
+
 ![App preview](.github/course-platform.gif)
 
 ## Environment setup
