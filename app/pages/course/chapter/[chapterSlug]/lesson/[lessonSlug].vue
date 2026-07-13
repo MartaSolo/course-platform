@@ -103,7 +103,10 @@ const sanitizedText = computed(() => {
       :video-src="lesson.sourceUrl"
       :title="lesson?.title"
     />
-    <div class="my-6" v-html="sanitizedText" />
+    <div
+      class="my-6 prose max-w-none marker:text-black"
+      v-html="sanitizedText"
+    />
 
     <LessonCompleteButton
       v-if="user"
