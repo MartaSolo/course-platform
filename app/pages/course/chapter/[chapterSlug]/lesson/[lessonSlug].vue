@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { sanitize } from "isomorphic-dompurify";
+
 const course = await useCourse();
 
 definePageMeta({
@@ -72,6 +74,13 @@ const isCompleted = computed<boolean>(() => {
     progress.value?.[chapterSlug as string]?.[lessonSlug as string] || false
   );
 });
+
+const sanitizedText = computed(() => {
+  return sanitize(lesson.value?.text || "", {
+    ALLOWED_TAGS: ["p", "ul", "ol", "li", "strong", "em", "code", "a"],
+    ALLOWED_ATTR: ["href"],
+  });
+});
 </script>
 
 <template>
@@ -82,22 +91,19 @@ const isCompleted = computed<boolean>(() => {
     <h2 class="my-6 text-2xl font-bold">{{ lesson?.title }}</h2>
     <div class="flex space-x-4 mt-2 mb-8">
       <NuxtLink
-        v-if="lesson?.sourceUrl"
+        v-if="lesson?.youtubeUrl"
         class="font-normal text-md text-gray-500 hover:text-green-700"
-        :to="lesson?.sourceUrl"
+        :to="lesson?.youtubeUrl"
       >
-        Download Source Code
-      </NuxtLink>
-      <NuxtLink
-        v-if="lesson?.downloadUrl"
-        class="font-normal text-md text-gray-500 hover:text-green-700"
-        :to="lesson?.downloadUrl"
-      >
-        Download Video
+        Watch on Youtube
       </NuxtLink>
     </div>
-    <VideoPlayer v-if="lesson?.videoId" :video-id="lesson.videoId" />
-    <p class="my-6">{{ lesson?.text }}</p>
+    <VideoPlayer
+      v-if="lesson?.sourceUrl"
+      :video-src="lesson.sourceUrl"
+      :title="lesson?.title"
+    />
+    <div class="my-6" v-html="sanitizedText" />
 
     <LessonCompleteButton
       v-if="user"
