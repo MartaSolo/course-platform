@@ -20,5 +20,9 @@ watch(
 </script>
 
 <template>
-  <div>Waiting for login...</div>
+  <div
+    class="prose w-full mt-20 mx-auto max-w-2xl flex flex-col items-center justify-center"
+  >
+    <h1>Waiting for login...</h1>
+  </div>
 </template>
