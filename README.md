@@ -79,6 +79,17 @@ If you only need to regenerate the client without creating a migration (e.g. aft
 docker compose exec app npx prisma generate
 ```
 
+### Generated client is committed
+
+`prisma/generated/` (the Prisma client and types) is committed to git rather than
+gitignored. This keeps the client available immediately after cloning, with no
+extra generation step required before the app can start.
+
+**Rule:** whenever you edit `prisma/schema.prisma`, always run `prisma migrate dev`
+(or `prisma generate`) and commit the resulting changes in `prisma/generated/`
+together with your schema change. Skipping this step leaves committed types out
+of sync with the schema.
+
 ### Force rebuild (after Dockerfile.dev changes)
 
 ```bash
@@ -102,6 +113,8 @@ The app is available at `http://localhost:3000`.
 ```bash
 npx prisma migrate dev
 ```
+
+See [Generated client is committed](#generated-client-is-committed) for why `prisma/generated/` must be committed alongside schema changes.
 
 ## Production
 
