@@ -54,7 +54,8 @@ docker compose down    # stop and remove the container
 
 ### How file watching works
 
-- Changes in `app/`, `server/`, `shared/`, `public/`, and `prisma/` are synced instantly (no rebuild)
+- Changes in `app/`, `server/`, `shared/`, and `public/` are synced instantly (no rebuild)
+- `prisma/` is mounted as a bind mount, so it syncs **bidirectionally**: your edits reach the container, and files the container creates (migrations, generated client) appear back on your host
 - Changes in `package.json` or `nuxt.config.ts` trigger an automatic image rebuild
 - Changes in `Dockerfile.dev` require a manual rebuild (see below)
 
@@ -62,10 +63,19 @@ Use `docker compose watch` (or `docker compose up --watch`). Plain `docker compo
 
 ### Prisma schema changes
 
-When you update `prisma/schema.prisma`, the file syncs automatically, but you must run migrations manually:
+The `prisma/` directory is a bind mount, so files created inside the container (migrations, generated client) appear on your host automatically — no manual copying needed.
+
+After editing `prisma/schema.prisma`, run migrations inside the container:
 
 ```bash
 docker compose exec app npx prisma migrate dev
+```
+
+This creates the migration file and regenerates the Prisma client in one step; both show up in your local `prisma/` directory right away.
+
+If you only need to regenerate the client without creating a migration (e.g. after running `prisma migrate dev --create-only`), run:
+
+```bash
 docker compose exec app npx prisma generate
 ```
 
@@ -91,7 +101,6 @@ The app is available at `http://localhost:3000`.
 
 ```bash
 npx prisma migrate dev
-npx prisma generate
 ```
 
 ## Production

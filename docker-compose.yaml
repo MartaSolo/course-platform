@@ -10,6 +10,8 @@ services:
       - .env
     environment:
       - HOST=0.0.0.0
+    volumes:
+      - ./prisma:/app/prisma
     develop:
       watch:
         - path: ./app
@@ -27,7 +29,4 @@ services:
           action: sync
         - path: ./public
           target: /app/public
-          action: sync
-        - path: ./prisma
-          target: /app/prisma
           action: sync
